@@ -1,0 +1,27 @@
+version: '3'
+
+services:
+  queue:
+    image: rabbitmq:4.0-management
+    container_name: queue
+    environment:
+      RABBITMQ_ERLANG_COOKIE: "SWQOKODSQALRPCLNMEQG"
+      RABBITMQ_DEFAULT_USER: "rabbitmq"
+      RABBITMQ_DEFAULT_PASS: "rabbitmq"
+      RABBITMQ_DEFAULT_HOST: "/"
+    ports:
+      - 5672:5672
+      - 15672:15672
+  
+  producer:
+    build: ./producer
+    platform: linux/amd64
+    depends_on:
+      - queue
+    volumes:
+      - ./producer:/app
+    ports:
+      - 8080:8080
+    env_file:
+      - ./producer/.env
+
